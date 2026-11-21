@@ -18,7 +18,12 @@ class Transaksi extends Model
         'id_transaksi',
         'time',
         'namaBarang',
-        'hargaBarang',
-        'kuantitas'
+        'kuantitas',
+        'isbn',
+        'pengarang',
+        'penerbit',
+        'tahun_terbit',
+        'jumlah_tersedia',
+        'jumlah_dipinjam',
     ];
 }

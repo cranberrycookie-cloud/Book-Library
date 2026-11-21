@@ -15,7 +15,6 @@ return new class extends Migration
             $table->string('id_transaksi',30)->primary();
             $table->dateTime('time');
             $table->string('namaBarang');
-            $table->decimal('hargaBarang',15,2);
             $table->integer('kuantitas');
             $table->timestamps();
             
