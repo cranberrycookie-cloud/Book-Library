@@ -21,15 +21,46 @@ use FPDF;
 class BookLibraryController extends Controller
 {
     // =====================================================
+    // HELPER SORTING ASC / DESC
+    // =====================================================
+
+    private function getSortParams(Request $request): array
+    {
+        $allowedSorts = [
+            'isbn',
+            'namaBarang',
+            'pengarang',
+            'penerbit',
+            'tahun_terbit',
+            'jumlah_tersedia',
+            'jumlah_dipinjam',
+            'kuantitas',
+            'time'
+        ];
+
+        $sort = in_array($request->get('sort'), $allowedSorts, true)
+            ? $request->get('sort')
+            : 'namaBarang';
+
+        $direction = $request->get('direction') === 'desc' ? 'desc' : 'asc';
+
+        return [$sort, $direction];
+    }
+
+
+    // =====================================================
     // DASHBOARD
     // =====================================================
 
-    public function index()
+    public function index(Request $request)
     {
-        $books = Transaksi::orderBy('namaBarang')
-            ->paginate(10);
+        [$sort, $direction] = $this->getSortParams($request);
 
-        return view('book-library.index', compact('books'));
+        $books = Transaksi::orderBy($sort, $direction)
+            ->paginate(10)
+            ->withQueryString();
+
+        return view('book-library.index', compact('books', 'sort', 'direction'));
     }
 
 
@@ -37,12 +68,15 @@ class BookLibraryController extends Controller
     // HALAMAN MANAGEMENT
     // =====================================================
 
-    public function manage()
+    public function manage(Request $request)
     {
-        $books = Transaksi::orderBy('namaBarang')
-            ->paginate(10);
+        [$sort, $direction] = $this->getSortParams($request);
 
-        return view('book-library.manage', compact('books'));
+        $books = Transaksi::orderBy($sort, $direction)
+            ->paginate(10)
+            ->withQueryString();
+
+        return view('book-library.manage', compact('books', 'sort', 'direction'));
     }
 
 

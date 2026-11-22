@@ -78,6 +78,30 @@
             white-space: nowrap;
         }
 
+        .sort-link {
+            color: #174ea6;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: .15s;
+        }
+
+        .sort-link:hover {
+            color: #0d3373;
+            text-decoration: underline;
+        }
+
+        .sort-icon {
+            font-size: 12px;
+            opacity: .55;
+        }
+
+        .sort-link.active .sort-icon {
+            opacity: 1;
+            font-weight: 800;
+        }
+
         .table tbody td {
             padding: 12px;
             vertical-align: middle;
@@ -361,6 +385,25 @@
             </div>
 
 
+            @php
+                $currentSort = $sort ?? request('sort', 'namaBarang');
+                $currentDirection = $direction ?? request('direction', 'asc');
+
+                $renderSortHeader = function (string $column, string $label) use ($currentSort, $currentDirection) {
+                    $isActive = $currentSort === $column;
+                    $nextDirection = ($isActive && $currentDirection === 'asc') ? 'desc' : 'asc';
+                    $icon = $isActive ? ($currentDirection === 'asc' ? '▲' : '▼') : '⇅';
+                    $url = request()->fullUrlWithQuery([
+                        'sort' => $column,
+                        'direction' => $nextDirection,
+                        'page' => 1,
+                    ]);
+                    $activeClass = $isActive ? 'active' : '';
+
+                    return "<a href=\"{$url}\" class=\"sort-link {$activeClass}\" title=\"Urutkan berdasarkan {$label}\"><span>{$label}</span><span class=\"sort-icon\">{$icon}</span></a>";
+                };
+            @endphp
+
             <div class="table-responsive">
 
                 <table class="table table-hover align-middle">
@@ -370,13 +413,13 @@
                         <tr>
 
                             <th>No.</th>
-                            <th>ISBN</th>
-                            <th>Judul Buku</th>
-                            <th>Pengarang</th>
-                            <th>Penerbit</th>
-                            <th>Tahun Terbit</th>
-                            <th>Keterangan</th>
-                            <th class="text-center">Qty</th>
+                            <th>{!! $renderSortHeader('isbn', 'ISBN') !!}</th>
+                            <th>{!! $renderSortHeader('namaBarang', 'Judul Buku') !!}</th>
+                            <th>{!! $renderSortHeader('pengarang', 'Pengarang') !!}</th>
+                            <th>{!! $renderSortHeader('penerbit', 'Penerbit') !!}</th>
+                            <th>{!! $renderSortHeader('tahun_terbit', 'Tahun Terbit') !!}</th>
+                            <th>{!! $renderSortHeader('jumlah_tersedia', 'Keterangan') !!}</th>
+                            <th class="text-center">{!! $renderSortHeader('kuantitas', 'Qty') !!}</th>
                             <th>Aksi</th>
 
                         </tr>
