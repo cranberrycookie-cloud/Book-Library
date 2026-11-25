@@ -1,41 +1,36 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BookLibraryController;
+use Illuminate\Support\Facades\Route;
 
-// HALAMAN UTAMA
-Route::get('/', [BookLibraryController::class, 'index'])
-    ->name('home');
+// Mendukung akses langsung ke /booklibrary
+Route::get('/booklibrary', [BookLibraryController::class, 'index'])->name('booklibrary.root');
 
-// BOOK LIBRARY
-Route::get('/booklibrary', [BookLibraryController::class, 'index'])
-    ->name('booklibrary.index');
+Route::prefix('booklibrary')->name('booklibrary.')->group(function () {
+    // Halaman Utama (Landing, Galeri, Form Peminjaman, Buku Saya)
+    Route::get('/', [BookLibraryController::class, 'index'])->name('index');
+    Route::get('/api/search', [BookLibraryController::class, 'searchApi'])->name('api.search');
+    Route::post('/api/store', [BookLibraryController::class, 'storeFromApi'])->name('api.store');
 
-// MANAGE
-Route::get('/booklibrary/manage', [BookLibraryController::class, 'manage'])
-    ->name('booklibrary.manage');
-    
-// CRUD
-// Tambah / simpan buku
-Route::post('/booklibrary', [BookLibraryController::class, 'store'])
-    ->name('booklibrary.store');
+    // Login / Logout Akun Gmail Pengunjung
+    Route::post('/user/login', [BookLibraryController::class, 'userLogin'])->name('user.login');
+    Route::post('/user/logout', [BookLibraryController::class, 'userLogout'])->name('user.logout');
 
-// Edit / update buku
-Route::put('/booklibrary/{id}', [BookLibraryController::class, 'update'])
-    ->name('booklibrary.update');
+    // Simpan & Kembalikan Peminjaman ke Database
+    Route::post('/borrow', [BookLibraryController::class, 'storeBorrow'])->name('borrow.store');
+    Route::patch('/borrow/{id}/return', [BookLibraryController::class, 'returnBorrow'])->name('borrow.return');
 
-// Hapus buku
-Route::delete('/booklibrary/{id}', [BookLibraryController::class, 'destroy'])
-    ->name('booklibrary.destroy');
+    // Halaman Terpisah Management System + Auth Pengelola
+    Route::get('/manage', [BookLibraryController::class, 'manage'])->name('manage');
+    Route::post('/manage/login', [BookLibraryController::class, 'adminLogin'])->name('manage.login');
+    Route::post('/manage/logout', [BookLibraryController::class, 'adminLogout'])->name('manage.logout');
 
-// EXPORT
-// Export Excel
-Route::get('/booklibrary/export', [BookLibraryController::class, 'export'])
-    ->name('booklibrary.export');
-// Export PDF
-Route::get('/booklibrary/export-pdf', [BookLibraryController::class, 'exportPdf'])
-    ->name('booklibrary.exportPdf');
+    // CRUD Data Peminjaman oleh Admin
+    Route::put('/manage/loans/{id}', [BookLibraryController::class, 'updateLoan'])->name('manage.update');
+    Route::delete('/manage/loans/{id}', [BookLibraryController::class, 'destroyLoan'])->name('manage.destroy');
 
-// IMPORT EXCEL
-Route::post('/booklibrary/import', [BookLibraryController::class, 'import'])
-    ->name('booklibrary.import');
+    // Export & Import (Menyesuaikan Data Peminjaman Database)
+    Route::get('/export', [BookLibraryController::class, 'exportExcel'])->name('export');
+    Route::get('/export-pdf', [BookLibraryController::class, 'exportPdf'])->name('exportPdf');
+    Route::post('/import', [BookLibraryController::class, 'importExcel'])->name('import');
+});

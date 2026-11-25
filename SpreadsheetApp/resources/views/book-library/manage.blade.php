@@ -4,1062 +4,671 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <title>Library Management System</title>
+    <title>Management System · Glaciary</title>
 
     <link
         href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
         rel="stylesheet">
 
     <style>
+        @font-face {
+            font-family: 'Surgena';
+            src:
+                url('{{ asset('fonts/Surgena.woff2') }}') format('woff2'),
+                url('{{ asset('fonts/Surgena.ttf') }}') format('truetype'),
+                url('{{ asset('fonts/Surgena-SemiBold.ttf') }}') format('truetype');
+            font-weight: 400 700;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        :root {
+            --font-surgena: 'Surgena', 'Segoe UI', Arial, sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
         body {
-            background: #f3f6fb;
-            font-family: Arial, sans-serif;
-            color: #263449;
+            margin: 0;
+            background:
+                radial-gradient(circle at 18% 12%, rgba(37, 99, 235, 0.24), transparent 45%),
+                radial-gradient(circle at 82% 28%, rgba(29, 78, 216, 0.18), transparent 48%),
+                #050811;
+            font-family: var(--font-surgena);
+            color: #eef4ff;
+            min-height: 100vh;
+            overflow-x: hidden;
         }
 
-        /* NAVBAR */
-        .navbar-custom {
-            background: linear-gradient(100deg, #174ea6, #2878d0);
-            padding: 19px 0;
-            color: white;
-        }
-        .brand {
-            color: white;
-            font-size: 23px;
-            font-weight: 800;
-            text-decoration: none;
-        }
-        .nav-link-custom {
-            color: white;
-            font-weight: 700;
-            text-decoration: none;
-            border: 1px solid rgba(255,255,255,.55);
-            border-radius: 9px;
-            padding: 9px 13px;
-            transition: .2s;
+        .top-bar {
+            background: rgba(13, 20, 38, 0.68);
+            backdrop-filter: blur(18px) saturate(160%);
+            -webkit-backdrop-filter: blur(18px) saturate(160%);
+            border-bottom: 1px solid rgba(147, 197, 253, 0.22);
+            box-shadow: 0 12px 34px rgba(2, 6, 18, 0.45);
+            padding: 14px 0;
         }
 
-        .nav-link-custom:hover {
-            background: rgba(255,255,255,.14);
-            color: white;
+        .manage-brand {
+            font-family: var(--font-surgena);
         }
-
-        /* HERO */
-
-        .hero {
-            background: linear-gradient(120deg, #e3efff, #e5f8ef);
-            border-radius: 18px;
-            padding: 27px;
-            margin-top: 28px;
-        }
-
-        .hero h1 {
-            font-weight: 800;
-            color: #174ea6;
-        }
-
-        /* PANEL */
 
         .panel {
-            background: white;
-            border: 0;
-            border-radius: 16px;
-            padding: 22px;
-            box-shadow: 0 5px 22px rgba(30,60,100,.07);
+            background: rgba(14, 23, 45, 0.68);
+            backdrop-filter: blur(16px) saturate(145%);
+            -webkit-backdrop-filter: blur(16px) saturate(145%);
+            border: 1px solid rgba(147, 197, 253, 0.20);
+            border-radius: 20px;
+            padding: 24px;
+            box-shadow: 0 14px 34px rgba(2, 6, 18, 0.50);
         }
 
-        /* TABLE */
+        .form-control,
+        .form-select {
+            background-color: rgba(10, 17, 34, 0.78);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(147, 197, 253, 0.22);
+            color: #f8fafc;
+            border-radius: 12px;
+        }
+
+        .form-control::placeholder {
+            color: #7b90b2;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            background-color: rgba(14, 23, 45, 0.92);
+            border-color: #60a5fa;
+            color: #ffffff;
+            box-shadow: 0 0 0 0.2rem rgba(59, 130, 246, 0.22);
+        }
+
+        .form-select option {
+            background-color: #0d152a;
+            color: #f8fafc;
+        }
+
+        .custom-file-picker-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            padding: 10px 14px;
+            border-radius: 12px;
+            background: rgba(10, 17, 34, 0.72);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(147, 197, 253, 0.24);
+            color: #dbeafe;
+            font-size: 13.5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background .2s ease, border-color .2s ease, color .2s ease, transform .15s ease;
+        }
+
+        .custom-file-picker-btn:hover {
+            background: rgba(37, 99, 235, 0.22);
+            border-color: rgba(96, 165, 250, 0.55);
+            color: #ffffff;
+            transform: translateY(-1px);
+        }
+
+        .custom-file-picker-btn .file-spark {
+            color: #60a5fa;
+            font-weight: 800;
+        }
+
+        .badge.text-bg-primary {
+            background-color: rgba(37, 99, 235, 0.24) !important;
+            color: #93c5fd !important;
+            border: 1px solid rgba(96, 165, 250, 0.36);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            border: 1px solid rgba(147, 197, 253, 0.30);
+            box-shadow: 0 6px 18px rgba(37, 99, 235, 0.28);
+        }
+
+        .btn-primary:hover {
+            filter: brightness(1.08);
+        }
+
+        .icon-action-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 999px;
+            padding: 0;
+        }
+
+        .table {
+            --bs-table-bg: transparent;
+            --bs-table-color: #e2eeff;
+            --bs-table-hover-bg: rgba(59, 130, 246, 0.12);
+            --bs-table-hover-color: #ffffff;
+            --bs-table-border-color: rgba(147, 197, 253, 0.16);
+        }
 
         .table thead th {
-            background: #eaf1fc;
-            color: #174ea6;
-            padding: 13px;
+            background: rgba(20, 34, 66, 0.88);
+            color: #93c5fd;
+            padding: 12px 14px;
             white-space: nowrap;
+            border-bottom: 1px solid rgba(147, 197, 253, 0.24);
         }
 
         .sort-link {
-            color: #174ea6;
+            color: #93c5fd;
             text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            transition: .15s;
         }
 
         .sort-link:hover {
-            color: #0d3373;
+            color: #ffffff;
             text-decoration: underline;
         }
 
-        .sort-icon {
-            font-size: 12px;
-            opacity: .55;
+        .modal-content.glass-modal {
+            background: rgba(12, 20, 38, 0.94);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            color: #ffffff;
+            border: 1px solid rgba(147, 197, 253, 0.24);
         }
 
-        .sort-link.active .sort-icon {
-            opacity: 1;
-            font-weight: 800;
-        }
-
-        .table tbody td {
-            padding: 12px;
-            vertical-align: middle;
-        }
-
-        .isbn-label {
-            display: inline-block;
-            background: #e7f0ff;
-            color: #2059a8;
-            padding: 6px 9px;
-            border-radius: 8px;
-            font-weight: 700;
-            white-space: nowrap;
-        }
-
-        /* STATUS */
-
-        .status-list {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 6px;
-            min-width: 155px;
-        }
-
-        .status-list .badge {
-            font-size: 12px;
-            padding: 7px 10px;
-            white-space: nowrap;
-        }
-
-        /* QTY */
-
-        .qty-number {
-            font-weight: 700;
-            text-align: center;
-            font-size: 16px;
-        }
-
-        .section-title {
-            color: #203653;
-            font-weight: 800;
-        }
-
-        /* FORM */
-
-        .form-label {
-            font-weight: 600;
-        }
-
-        /* ACTION BUTTON */
-
-        .action-buttons {
-            display: flex;
-            gap: 7px;
-            flex-wrap: wrap;
-        }
-
-        /* MODAL */
-
-        .modal-dialog-scrollable .modal-content {
-            max-height: calc(100vh - 2rem);
-            display: flex;
-            flex-direction: column;
-        }
-
-        .modal-dialog-scrollable .modal-header {
-            flex-shrink: 0;
-            background: white;
-        }
-
-        .modal-dialog-scrollable .modal-body {
-            overflow-y: auto;
-            flex: 1 1 auto;
-        }
-
-        .modal-dialog-scrollable .modal-footer {
-            flex-shrink: 0;
-            background: white;
-        }
-
-        .modal-content {
-            border: 0;
-            border-radius: 14px;
-        }
-
-        /* FOOTER */
-
-        footer {
-            color: #8290a3;
-            font-size: 13px;
-            padding: 28px 0;
-        }
-
-        /* RESPONSIVE */
-
-        @media (max-width: 576px) {
-
-            .brand {
-                font-size: 18px;
-            }
-
-            .nav-link-custom {
-                font-size: 12px;
-                padding: 7px 9px;
-            }
-
-            .hero {
-                padding: 20px;
-            }
-
-            .hero h1 {
-                font-size: 25px;
-            }
-
-            .panel {
-                padding: 15px;
-            }
-
-            .action-buttons {
-                flex-direction: column;
-            }
-
+        .modal-content.glass-modal .btn-close {
+            filter: invert(1) grayscale(100%) brightness(200%);
         }
     </style>
 </head>
 
 <body>
 
-    <!-- =====================================================
-         NAVBAR
-    ====================================================== -->
-
-    <nav class="navbar-custom">
-
-        <div class="container d-flex justify-content-between align-items-center gap-3">
-
-            <a href="{{ route('booklibrary.index') }}" class="brand">
-                📚 Book Library
-            </a>
-
-            <a href="{{ route('booklibrary.index') }}" class="nav-link-custom">
-                ← Kembali ke Dashboard
-            </a>
-
-        </div>
-
-    </nav>
-
-
-    <div class="container pb-4">
-
-        <!-- =================================================
-             HERO
-        ================================================== -->
-
-        <div class="hero d-flex flex-wrap justify-content-between align-items-center gap-3">
-
+    <header class="top-bar mb-4">
+        <div class="container d-flex flex-wrap justify-content-between align-items-center gap-2">
             <div>
-
-                <span class="badge text-bg-primary mb-2">
-                    ADMINISTRASI KOLEKSI
-                </span>
-
-                <h1 class="mb-2">
-                    Library Management System
-                </h1>
-
-                <p class="mb-0">
-                    Tambah, perbarui, dan hapus informasi koleksi buku.
-                </p>
-
+                <a href="{{ route('booklibrary.index') }}" class="text-white text-decoration-none fw-bold fs-5 manage-brand">
+                    Glaciary
+                </a>
+                <span class="badge text-bg-warning text-dark ms-2">Management System</span>
             </div>
 
-            <button
-                type="button"
-                class="btn btn-primary btn-lg"
-                data-bs-toggle="modal"
-                data-bs-target="#modalTambah">
-
-                ＋ Tambah Buku
-
-            </button>
-
+            <div class="d-flex align-items-center gap-2">
+                @if($isAdmin)
+                    <span class="small text-info fw-semibold">{{ $adminEmail }}</span>
+                    <form action="{{ route('booklibrary.manage.logout') }}" method="POST" class="d-inline">
+                        @csrf
+                        <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill px-3">
+                            Logout
+                        </button>
+                    </form>
+                @endif
+                <a href="{{ route('booklibrary.index') }}" class="btn btn-sm btn-outline-light rounded-pill px-3">
+                    ← Kembali ke Halaman Utama
+                </a>
+            </div>
         </div>
+    </header>
 
-
-        <!-- =================================================
-             SUCCESS MESSAGE
-        ================================================== -->
+    <main class="container pb-5">
 
         @if(session('success'))
-
-            <div class="alert alert-success alert-dismissible fade show mt-4">
-
+            <div class="alert alert-success alert-dismissible fade show mb-4">
                 {{ session('success') }}
-
-                <button
-                    type="button"
-                    class="btn-close"
-                    data-bs-dismiss="alert">
-                </button>
-
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
-
         @endif
-
-
-        <!-- =================================================
-             ERROR MESSAGE
-        ================================================== -->
 
         @if(session('error'))
-
-            <div class="alert alert-danger alert-dismissible fade show mt-4">
-
+            <div class="alert alert-danger alert-dismissible fade show mb-4">
                 {{ session('error') }}
-
-                <button
-                    type="button"
-                    class="btn-close"
-                    data-bs-dismiss="alert">
-                </button>
-
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
-
         @endif
 
-
-        <!-- =================================================
-             VALIDATION ERROR
-        ================================================== -->
-
-        @if($errors->any())
-
-            <div class="alert alert-danger mt-4">
-
-                <strong>Data belum dapat disimpan. Periksa kembali:</strong>
-
-                <ul class="mb-0 mt-2">
-
-                    @foreach($errors->all() as $error)
-
-                        <li>
-                            {{ $error }}
-                        </li>
-
-                    @endforeach
-
-                </ul>
-
+        @if(session('hasil_import'))
+            <div class="alert alert-success alert-dismissible fade show mb-4">
+                <strong>Import selesai!</strong>
+                Berhasil: {{ session('hasil_import')['berhasil'] }}
+                | Tidak valid: {{ session('hasil_import')['tidak_valid'] }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
-
         @endif
 
+        @if(!$isAdmin)
+            <div class="panel mx-auto mt-5" style="max-width: 480px;">
+                <span class="badge text-bg-warning text-dark mb-2">RESTRICTED ACCESS</span>
+                <h4 class="fw-bold text-white mb-1">Login Management System</h4>
+                <p class="text-secondary small mb-3">
+                    Halaman ini khusus untuk pengelola perpustakaan. Masuk dengan akun Gmail khusus yang terdaftar.
+                </p>
 
-        <!-- =================================================
-             TABEL PENGELOLAAN BUKU
-        ================================================== -->
-
-        <div class="panel mt-4">
-
-            <div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
-
-                <div>
-
-                    <h4 class="section-title mb-1">
-                        📚 Daftar Data Buku
-                    </h4>
-
-                    <p class="text-secondary mb-0">
-                        Gunakan tombol Aksi untuk memperbarui atau menghapus data.
-                    </p>
-
+                <div class="p-3 rounded-4 mb-3 small" style="background: rgba(14, 23, 45, 0.72); backdrop-filter: blur(12px); border: 1px solid rgba(147, 197, 253, 0.24);">
+                    <div class="text-secondary">Akun Gmail Dummy Pengelola:</div>
+                    <div>Email: <strong class="text-white">admin.perpus@gmail.com</strong></div>
+                    <div>Password: <strong class="text-white">AdminLib#2026</strong></div>
+                    <button type="button" class="btn btn-sm btn-outline-info mt-2" id="fillDummyAdminBtn">
+                        Isi Otomatis Akun Dummy
+                    </button>
                 </div>
 
-                <span class="badge text-bg-primary">
-                    {{ $books->total() }} koleksi
-                </span>
+                <form action="{{ route('booklibrary.manage.login') }}" method="POST" class="row g-3">
+                    @csrf
+                    <div class="col-12">
+                        <label class="form-label small fw-bold text-secondary">Email Pengelola</label>
+                        <input type="email" name="email" id="adminEmailField" class="form-control" placeholder="admin.perpus@gmail.com" required>
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label small fw-bold text-secondary">Kata Sandi</label>
+                        <input type="password" name="password" id="adminPassField" class="form-control" placeholder="Masukkan kata sandi" required>
+                    </div>
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-primary w-100 fw-bold py-2">
+                            Masuk ke Dashboard Management
+                        </button>
+                    </div>
+                </form>
+            </div>
+        @else
+            <div class="row g-4 mb-4">
+                <div class="col-md-4">
+                    <div class="panel h-100">
+                        <h5 class="fw-bold text-white">Export Excel</h5>
+                        <p class="text-secondary small">Unduh seluruh data peminjaman buku masyarakat dalam format XLSX.</p>
+                        <a href="{{ route('booklibrary.export') }}" class="btn btn-primary w-100 fw-semibold">
+                            Download Excel Peminjaman
+                        </a>
+                    </div>
+                </div>
 
+                <div class="col-md-4">
+                    <div class="panel h-100">
+                        <h5 class="fw-bold text-white">Export PDF (FPDF)</h5>
+                        <p class="text-secondary small">Unduh laporan rekap peminjaman buku dalam format PDF.</p>
+                        <a href="{{ route('booklibrary.exportPdf') }}" class="btn btn-warning text-dark w-100 fw-semibold">
+                            Download PDF Peminjaman
+                        </a>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="panel h-100">
+                        <h5 class="fw-bold text-white">Import Data Peminjaman</h5>
+                        <p class="text-secondary small">Kolom: Gmail | Nama | Judul Buku | Qty | Tgl Pinjam | Durasi | Status</p>
+                        <form action="{{ route('booklibrary.import') }}" method="POST" enctype="multipart/form-data">
+                            @csrf
+                            <input type="file" id="importFileInput" name="file_excel" class="d-none" accept=".xlsx,.xls,.csv" required>
+                            <label for="importFileInput" class="custom-file-picker-btn mb-2" id="importFileLabel">
+                                <span class="file-spark">✦</span>
+                                <span id="importFileNameText">Pilih File Excel / CSV...</span>
+                            </label>
+                            <button type="submit" class="btn btn-success w-100 fw-semibold">
+                                Import Excel / CSV
+                            </button>
+                        </form>
+                    </div>
+                </div>
             </div>
 
+            <div class="row g-4 mb-4">
+                <div class="col-lg-5">
+                    <div class="panel h-100">
+                        <h5 class="fw-bold text-white mb-1">Status Peminjaman Buku</h5>
+                        <p class="text-secondary small mb-3">Perbandingan buku sedang dipinjam dan sudah dikembalikan.</p>
+                        <div style="position: relative; height: 250px;">
+                            <canvas id="loanStatusChart"></canvas>
+                        </div>
+                    </div>
+                </div>
 
-            @php
-                $currentSort = $sort ?? request('sort', 'namaBarang');
-                $currentDirection = $direction ?? request('direction', 'asc');
+                <div class="col-lg-7">
+                    <div class="panel h-100">
+                        <h5 class="fw-bold text-white mb-1">Total Buku Dipinjam per Akun Gmail</h5>
+                        <p class="text-secondary small mb-3">Distribusi jumlah buku yang dipinjam oleh masing-masing pengguna Gmail.</p>
+                        <div style="position: relative; height: 250px;">
+                            <canvas id="loanPerGmailChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-                $renderSortHeader = function (string $column, string $label) use ($currentSort, $currentDirection) {
-                    $isActive = $currentSort === $column;
-                    $nextDirection = ($isActive && $currentDirection === 'asc') ? 'desc' : 'asc';
-                    $icon = $isActive ? ($currentDirection === 'asc' ? '▲' : '▼') : '⇅';
-                    $url = request()->fullUrlWithQuery([
-                        'sort' => $column,
-                        'direction' => $nextDirection,
-                        'page' => 1,
-                    ]);
-                    $activeClass = $isActive ? 'active' : '';
+            <div class="panel" id="database-peminjaman-panel">
+                <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-3">
+                    <div>
+                        <h4 class="fw-bold text-white mb-1">Database Peminjaman Buku Masyarakat</h4>
+                        <p class="text-secondary small mb-0">Seluruh data peminjaman yang masuk melalui akun Gmail pengunjung.</p>
+                    </div>
 
-                    return "<a href=\"{$url}\" class=\"sort-link {$activeClass}\" title=\"Urutkan berdasarkan {$label}\"><span>{$label}</span><span class=\"sort-icon\">{$icon}</span></a>";
-                };
-            @endphp
+                    <div class="d-flex flex-wrap align-items-center gap-2">
+                        <form id="tableSearchForm" action="{{ route('booklibrary.manage') }}" method="GET" class="d-flex align-items-center gap-2">
+                            <input type="hidden" name="sort" value="{{ $sort }}">
+                            <input type="hidden" name="direction" value="{{ $direction }}">
+                            <input
+                                type="text"
+                                name="q"
+                                id="tableSearchInput"
+                                value="{{ $search ?? '' }}"
+                                class="form-control form-control-sm rounded-pill px-3"
+                                style="min-width: 220px;"
+                                placeholder="Cari gmail, nama, judul, status...">
+                            <button type="submit" class="btn btn-sm btn-primary rounded-pill px-3">
+                                Cari
+                            </button>
+                            @if(!empty($search))
+                                <a
+                                    href="{{ route('booklibrary.manage', ['sort' => $sort, 'direction' => $direction]) }}"
+                                    class="btn btn-sm btn-outline-light rounded-pill px-3 keep-scroll-link">
+                                    Reset
+                                </a>
+                            @endif
+                        </form>
+                        <span class="badge text-bg-primary">{{ $loans->total() }} transaksi</span>
+                    </div>
+                </div>
 
-            <div class="table-responsive">
+                @php
+                    $sortLink = function (string $col, string $label) use ($sort, $direction) {
+                        $nextDir = ($sort === $col && $direction === 'asc') ? 'desc' : 'asc';
+                        $arrow = $sort === $col ? ($direction === 'asc' ? ' ▲' : ' ▼') : '';
+                        $url = request()->fullUrlWithQuery(['sort' => $col, 'direction' => $nextDir, 'page' => 1]);
+                        return "<a href=\"{$url}\" class=\"sort-link keep-scroll-link\">{$label}{$arrow}</a>";
+                    };
+                @endphp
 
-                <table class="table table-hover align-middle">
-
-                    <thead>
-
-                        <tr>
-
-                            <th>No.</th>
-                            <th>{!! $renderSortHeader('isbn', 'ISBN') !!}</th>
-                            <th>{!! $renderSortHeader('namaBarang', 'Judul Buku') !!}</th>
-                            <th>{!! $renderSortHeader('pengarang', 'Pengarang') !!}</th>
-                            <th>{!! $renderSortHeader('penerbit', 'Penerbit') !!}</th>
-                            <th>{!! $renderSortHeader('tahun_terbit', 'Tahun Terbit') !!}</th>
-                            <th>{!! $renderSortHeader('jumlah_tersedia', 'Keterangan') !!}</th>
-                            <th class="text-center">{!! $renderSortHeader('kuantitas', 'Qty') !!}</th>
-                            <th>Aksi</th>
-
-                        </tr>
-
-                    </thead>
-
-
-                    <tbody>
-
-                        @forelse($books as $index => $book)
-
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead>
                             <tr>
-
-                                <!-- NO -->
-
-                                <td>
-                                    {{ $books->firstItem() + $index }}
-                                </td>
-
-
-                                <!-- ISBN -->
-
-                                <td>
-
-                                    @if($book->isbn)
-
-                                        <span class="isbn-label">
-                                            {{ $book->isbn }}
-                                        </span>
-
-                                    @else
-
-                                        <span class="text-muted">
-                                            -
-                                        </span>
-
-                                    @endif
-
-                                </td>
-
-
-                                <!-- JUDUL -->
-
-                                <td class="fw-semibold">
-                                    {{ $book->namaBarang }}
-                                </td>
-
-
-                                <!-- PENGARANG -->
-
-                                <td>
-                                    {{ $book->pengarang ?: '-' }}
-                                </td>
-
-
-                                <!-- PENERBIT -->
-
-                                <td>
-                                    {{ $book->penerbit ?: '-' }}
-                                </td>
-
-
-                                <!-- TAHUN TERBIT -->
-
-                                <td>
-                                    {{ $book->tahun_terbit ?: '-' }}
-                                </td>
-
-
-                                <!-- KETERANGAN DENGAN JUMLAH -->
-
-                                <td>
-
-                                    <div class="status-list">
-
-                                        @if((int) $book->jumlah_tersedia > 0)
-
-                                            <span class="badge text-bg-success">
-
-                                                Tersedia:
-                                                {{ (int) $book->jumlah_tersedia }}
-                                                buku
-
-                                            </span>
-
+                                <th>No.</th>
+                                <th>{!! $sortLink('gmail_peminjam', 'Akun Gmail') !!}</th>
+                                <th>{!! $sortLink('nama_peminjam', 'Nama Peminjam') !!}</th>
+                                <th>{!! $sortLink('judul_buku', 'Judul Buku') !!}</th>
+                                <th class="text-center">{!! $sortLink('jumlah_buku', 'Qty') !!}</th>
+                                <th>{!! $sortLink('tanggal_pinjam', 'Rentang Waktu Peminjaman') !!}</th>
+                                <th>{!! $sortLink('status', 'Status') !!}</th>
+                                <th class="text-end">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse($loans as $idx => $loan)
+                                @php $loanId = $loan->id ?? $loan->getKey(); @endphp
+                                <tr>
+                                    <td>{{ $loans->firstItem() + $idx }}</td>
+                                    <td class="text-info fw-semibold">{{ $loan->gmail_peminjam }}</td>
+                                    <td>{{ $loan->nama_peminjam }}</td>
+                                    <td class="fw-semibold text-white">
+                                        {{ $loan->judul_buku }}
+                                        @if($loan->catatan)
+                                            <div class="small text-secondary fw-normal">{{ $loan->catatan }}</div>
                                         @endif
-
-
-                                        @if((int) $book->jumlah_dipinjam > 0)
-
-                                            <span class="badge text-bg-warning">
-
-                                                Sedang Dipinjam:
-                                                {{ (int) $book->jumlah_dipinjam }}
-                                                buku
-
-                                            </span>
-
+                                    </td>
+                                    <td class="text-center fw-bold">{{ $loan->jumlah_buku }}</td>
+                                    <td class="small">
+                                        {{ optional($loan->tanggal_pinjam)->format('d M Y') ?? '-' }} – {{ optional($loan->tanggal_kembali)->format('d M Y') ?? '-' }}
+                                        <span class="text-secondary">({{ $loan->durasi_hari ?? 7 }} hari)</span>
+                                    </td>
+                                    <td>
+                                        @if($loan->status === 'Dipinjam')
+                                            <span class="badge text-bg-warning text-dark">Dipinjam</span>
+                                        @else
+                                            <span class="badge text-bg-success">Dikembalikan</span>
                                         @endif
-
-
-                                        @if(
-                                            (int) $book->jumlah_tersedia === 0 &&
-                                            (int) $book->jumlah_dipinjam === 0
-                                        )
-
-                                            <span class="badge text-bg-secondary">
-                                                Stok Kosong
-                                            </span>
-
-                                        @endif
-
-                                    </div>
-
-                                </td>
-
-
-                                <!-- QTY: TOTAL BUKU -->
-
-                                <td class="qty-number">
-
-                                    {{ (int) $book->jumlah_tersedia + (int) $book->jumlah_dipinjam }}
-
-                                </td>
-
-
-                                <!-- AKSI -->
-
-                                <td>
-
-                                    <div class="action-buttons">
-
-                                        <!-- UPDATE -->
-
+                                    </td>
+                                    <td class="text-end text-nowrap">
                                         <button
                                             type="button"
-                                            class="btn btn-sm btn-warning"
+                                            class="btn btn-sm btn-outline-info icon-action-btn me-1 edit-loan-btn"
+                                            title="Edit"
+                                            aria-label="Edit"
                                             data-bs-toggle="modal"
-                                            data-bs-target="#modalEdit{{ $book->id_transaksi }}">
-
-                                            ✏️ Update
-
+                                            data-bs-target="#editLoanModal"
+                                            data-id="{{ $loanId }}"
+                                            data-gmail="{{ $loan->gmail_peminjam }}"
+                                            data-nama="{{ $loan->nama_peminjam }}"
+                                            data-judul="{{ $loan->judul_buku }}"
+                                            data-qty="{{ $loan->jumlah_buku }}"
+                                            data-tgl-pinjam="{{ optional($loan->tanggal_pinjam)->format('Y-m-d') }}"
+                                            data-durasi="{{ $loan->durasi_hari ?? 7 }}"
+                                            data-status="{{ $loan->status }}"
+                                            data-catatan="{{ $loan->catatan ?? '' }}">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                                <path d="M12 20h9"></path>
+                                                <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+                                            </svg>
                                         </button>
 
-
-                                        <!-- DELETE -->
-
                                         <form
-                                            action="{{ route('booklibrary.destroy', $book->id_transaksi) }}"
+                                            action="{{ route('booklibrary.manage.destroy', $loanId) }}"
                                             method="POST"
-                                            onsubmit="return confirm('Yakin ingin menghapus data buku ini?');">
-
+                                            class="d-inline delete-loan-form"
+                                            onsubmit="return confirm('Yakin ingin menghapus data peminjaman ini?');">
                                             @csrf
-
                                             @method('DELETE')
-
-                                            <button
-                                                type="submit"
-                                                class="btn btn-sm btn-danger">
-
-                                                🗑️ Delete
-
+                                            <button type="submit" class="btn btn-sm btn-outline-danger icon-action-btn" title="Hapus" aria-label="Hapus">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                                    <polyline points="3 6 5 6 21 6"></polyline>
+                                                    <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path>
+                                                    <path d="M10 11v6"></path>
+                                                    <path d="M14 11v6"></path>
+                                                    <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"></path>
+                                                </svg>
                                             </button>
-
                                         </form>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="8" class="text-center text-secondary py-4">
+                                        @if(!empty($search))
+                                            Tidak ada data peminjaman yang cocok dengan kata kunci "<strong>{{ $search }}</strong>".
+                                        @else
+                                            Belum ada data peminjaman buku di database.
+                                        @endif
+                                    </td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
 
-                                    </div>
-
-                                </td>
-
-                            </tr>
-
-
-                        @empty
-
-                            <tr>
-
-                                <td
-                                    colspan="9"
-                                    class="text-center text-secondary py-4">
-
-                                    Belum ada data buku.
-                                    Klik Tambah Buku untuk memasukkan koleksi pertama.
-
-                                </td>
-
-                            </tr>
-
-                        @endforelse
-
-                    </tbody>
-
-                </table>
-
+                <div class="d-flex justify-content-end">
+                    {{ $loans->links('pagination::bootstrap-5') }}
+                </div>
             </div>
+        @endif
 
+    </main>
 
-            <!-- =================================================
-                 PAGINATION
-            ================================================== -->
-
-            <div class="d-flex justify-content-end">
-
-                {{ $books->links('pagination::bootstrap-5') }}
-
-            </div>
-
-        </div>
-
-
-        <!-- =================================================
-             MODAL TAMBAH BUKU
-        ================================================== -->
-
-        <div class="modal fade" id="modalTambah" tabindex="-1">
-
-            <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
-
-                <form
-                    action="{{ route('booklibrary.store') }}"
-                    method="POST"
-                    class="modal-content">
-
-                    @csrf
-
-
-                    <!-- HEADER -->
-
-                    <div class="modal-header">
-
-                        <h5 class="modal-title">
-                            ＋ Tambah Buku
-                        </h5>
-
-                        <button
-                            type="button"
-                            class="btn-close"
-                            data-bs-dismiss="modal">
-                        </button>
-
+    @if($isAdmin)
+        <div class="modal fade" id="editLoanModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content glass-modal rounded-4">
+                    <div class="modal-header border-secondary border-opacity-25">
+                        <h5 class="modal-title fw-bold">Edit Data Peminjaman</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
                     </div>
-
-
-                    <!-- BODY -->
-
-                    <div class="modal-body">
-
-                        <div class="row g-3">
-
-
-                            <!-- ISBN -->
-
-                            <div class="col-md-6">
-
-                                <label class="form-label">
-                                    ISBN
-                                </label>
-
-                                <input
-                                    type="text"
-                                    name="isbn"
-                                    class="form-control"
-                                    placeholder="Contoh: 9786020324784"
-                                    maxlength="20"
-                                    required>
-
-                            </div>
-
-
-                            <!-- JUDUL BUKU -->
-
-                            <div class="col-md-6">
-
-                                <label class="form-label">
-                                    Judul Buku
-                                </label>
-
-                                <input
-                                    type="text"
-                                    name="judul_buku"
-                                    class="form-control"
-                                    placeholder="Masukkan judul buku"
-                                    required>
-
-                            </div>
-
-
-                            <!-- PENGARANG -->
-
-                            <div class="col-md-6">
-
-                                <label class="form-label">
-                                    Pengarang
-                                </label>
-
-                                <input
-                                    type="text"
-                                    name="pengarang"
-                                    class="form-control"
-                                    placeholder="Masukkan nama pengarang">
-
-                            </div>
-
-
-                            <!-- PENERBIT -->
-
-                            <div class="col-md-6">
-
-                                <label class="form-label">
-                                    Penerbit
-                                </label>
-
-                                <input
-                                    type="text"
-                                    name="penerbit"
-                                    class="form-control"
-                                    placeholder="Masukkan nama penerbit">
-
-                            </div>
-
-
-                            <!-- TAHUN TERBIT -->
-
-                            <div class="col-md-6">
-
-                                <label class="form-label">
-                                    Tahun Terbit
-                                </label>
-
-                                <input
-                                    type="number"
-                                    name="tahun_terbit"
-                                    class="form-control"
-                                    min="1000"
-                                    max="2100"
-                                    placeholder="Contoh: 2024">
-
-                            </div>
-
-
-                            <!-- JUMLAH TERSEDIA -->
-
-                            <div class="col-md-6">
-
-                                <label class="form-label">
-                                    Jumlah Tersedia
-                                </label>
-
-                                <input
-                                    type="number"
-                                    name="jumlah_tersedia"
-                                    class="form-control"
-                                    value="1"
-                                    min="0"
-                                    required>
-
-                            </div>
-
-
-                            <!-- JUMLAH DIPINJAM -->
-
-                            <div class="col-md-6">
-
-                                <label class="form-label">
-                                    Jumlah Sedang Dipinjam
-                                </label>
-
-                                <input
-                                    type="number"
-                                    name="jumlah_dipinjam"
-                                    class="form-control"
-                                    value="0"
-                                    min="0"
-                                    required>
-
-                            </div>
-
-                        </div>
-
-
-                        <small class="text-muted d-block mt-3">
-
-                            Keterangan buku akan menyesuaikan otomatis
-                            berdasarkan jumlah tersedia dan jumlah dipinjam.
-
-                        </small>
-
-                    </div>
-
-
-                    <!-- FOOTER -->
-
-                    <div class="modal-footer">
-
-                        <button
-                            type="button"
-                            class="btn btn-secondary"
-                            data-bs-dismiss="modal">
-
-                            Batal
-
-                        </button>
-
-                        <button
-                            type="submit"
-                            class="btn btn-primary">
-
-                            Simpan Buku
-
-                        </button>
-
-                    </div>
-
-                </form>
-
-            </div>
-
-        </div>
-
-
-        <!-- =================================================
-             MODAL UPDATE BUKU
-        ================================================== -->
-
-        @foreach($books as $book)
-
-            <div
-                class="modal fade"
-                id="modalEdit{{ $book->id_transaksi }}"
-                tabindex="-1">
-
-                <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
-
-                    <form
-                        action="{{ route('booklibrary.update', $book->id_transaksi) }}"
-                        method="POST"
-                        class="modal-content">
-
+                    <form id="editLoanForm" method="POST" action="">
                         @csrf
-
                         @method('PUT')
-
-
-                        <!-- HEADER -->
-
-                        <div class="modal-header">
-
-                            <h5 class="modal-title">
-                                ✏️ Update Buku
-                            </h5>
-
-                            <button
-                                type="button"
-                                class="btn-close"
-                                data-bs-dismiss="modal">
-                            </button>
-
-                        </div>
-
-
-                        <!-- BODY -->
-
-                        <div class="modal-body">
-
-                            <div class="row g-3">
-
-
-                                <!-- ISBN -->
-
-                                <div class="col-md-6">
-
-                                    <label class="form-label">
-                                        ISBN
-                                    </label>
-
-                                    <input
-                                        type="text"
-                                        name="isbn"
-                                        class="form-control"
-                                        value="{{ $book->isbn }}"
-                                        maxlength="20"
-                                        required>
-
-                                </div>
-
-
-                                <!-- JUDUL BUKU -->
-
-                                <div class="col-md-6">
-
-                                    <label class="form-label">
-                                        Judul Buku
-                                    </label>
-
-                                    <input
-                                        type="text"
-                                        name="judul_buku"
-                                        class="form-control"
-                                        value="{{ $book->namaBarang }}"
-                                        required>
-
-                                </div>
-
-
-                                <!-- PENGARANG -->
-
-                                <div class="col-md-6">
-
-                                    <label class="form-label">
-                                        Pengarang
-                                    </label>
-
-                                    <input
-                                        type="text"
-                                        name="pengarang"
-                                        class="form-control"
-                                        value="{{ $book->pengarang }}">
-
-                                </div>
-
-
-                                <!-- PENERBIT -->
-
-                                <div class="col-md-6">
-
-                                    <label class="form-label">
-                                        Penerbit
-                                    </label>
-
-                                    <input
-                                        type="text"
-                                        name="penerbit"
-                                        class="form-control"
-                                        value="{{ $book->penerbit }}">
-
-                                </div>
-
-
-                                <!-- TAHUN TERBIT -->
-
-                                <div class="col-md-6">
-
-                                    <label class="form-label">
-                                        Tahun Terbit
-                                    </label>
-
-                                    <input
-                                        type="number"
-                                        name="tahun_terbit"
-                                        class="form-control"
-                                        value="{{ $book->tahun_terbit }}"
-                                        min="1000"
-                                        max="2100">
-
-                                </div>
-
-
-                                <!-- JUMLAH TERSEDIA -->
-
-                                <div class="col-md-6">
-
-                                    <label class="form-label">
-                                        Jumlah Tersedia
-                                    </label>
-
-                                    <input
-                                        type="number"
-                                        name="jumlah_tersedia"
-                                        class="form-control"
-                                        value="{{ $book->jumlah_tersedia }}"
-                                        min="0"
-                                        required>
-
-                                </div>
-
-
-                                <!-- JUMLAH DIPINJAM -->
-
-                                <div class="col-md-6">
-
-                                    <label class="form-label">
-                                        Jumlah Sedang Dipinjam
-                                    </label>
-
-                                    <input
-                                        type="number"
-                                        name="jumlah_dipinjam"
-                                        class="form-control"
-                                        value="{{ $book->jumlah_dipinjam }}"
-                                        min="0"
-                                        required>
-
-                                </div>
-
+                        <div class="modal-body row g-3">
+                            <div class="col-12">
+                                <label class="form-label small fw-bold text-secondary">Akun Gmail</label>
+                                <input type="email" name="gmail_peminjam" id="editGmailInput" class="form-control" required>
                             </div>
-
+                            <div class="col-12">
+                                <label class="form-label small fw-bold text-secondary">Nama Peminjam</label>
+                                <input type="text" name="nama_peminjam" id="editNamaInput" class="form-control" required>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label small fw-bold text-secondary">Judul Buku</label>
+                                <input type="text" name="judul_buku" id="editJudulInput" class="form-control" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label small fw-bold text-secondary">Jumlah (Qty)</label>
+                                <input type="number" name="jumlah_buku" id="editQtyInput" class="form-control" min="1" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label small fw-bold text-secondary">Tanggal Pinjam</label>
+                                <input type="date" name="tanggal_pinjam" id="editTglPinjamInput" class="form-control" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label small fw-bold text-secondary">Durasi (Hari)</label>
+                                <input type="number" name="durasi_hari" id="editDurasiInput" class="form-control" min="1" required>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label small fw-bold text-secondary">Status</label>
+                                <select name="status" id="editStatusInput" class="form-select">
+                                    <option value="Dipinjam">Dipinjam</option>
+                                    <option value="Dikembalikan">Dikembalikan</option>
+                                </select>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label small fw-bold text-secondary">Catatan</label>
+                                <input type="text" name="catatan" id="editCatatanInput" class="form-control">
+                            </div>
                         </div>
-
-
-                        <!-- FOOTER -->
-
-                        <div class="modal-footer">
-
-                            <button
-                                type="button"
-                                class="btn btn-secondary"
-                                data-bs-dismiss="modal">
-
-                                Batal
-
-                            </button>
-
-                            <button
-                                type="submit"
-                                class="btn btn-primary">
-
-                                Simpan Perubahan
-
-                            </button>
+                        <div class="modal-footer border-secondary border-opacity-25">
+                            <button type="button" class="btn btn-sm btn-outline-light rounded-pill px-3" data-bs-dismiss="modal">Batal</button>
+                            <button type="submit" class="btn btn-sm btn-primary rounded-pill px-4 fw-bold">Simpan Perubahan</button>
                         </div>
                     </form>
                 </div>
             </div>
-        @endforeach
+        </div>
+    @endif
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+    <script>
+        (function () {
+            const SCROLL_KEY = 'booklibrary_manage_scroll_y';
 
-        <!-- =================================================
-             FOOTER
-        ================================================== -->
-        <footer class="text-center">
-            © 2026 Book Library · Laravel, Kelompok 14.
-        </footer>
-    </div>
+            function saveCurrentScroll() {
+                try {
+                    sessionStorage.setItem(SCROLL_KEY, String(window.scrollY || window.pageYOffset || 0));
+                } catch (_) {}
+            }
 
+            // Kembalikan posisi scroll setelah reload/redirect
+            try {
+                const savedY = sessionStorage.getItem(SCROLL_KEY);
+                if (savedY !== null) {
+                    sessionStorage.removeItem(SCROLL_KEY);
+                    const targetY = parseInt(savedY, 10);
+                    if (!Number.isNaN(targetY) && targetY > 0) {
+                        requestAnimationFrame(() => {
+                            window.scrollTo({ top: targetY, behavior: 'instant' });
+                        });
+                    }
+                }
+            } catch (_) {}
 
-    <!-- =====================================================
-         BOOTSTRAP JAVASCRIPT
-    ====================================================== -->
-    <script
-        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+            // Simpan posisi scroll saat submit search, edit, hapus, atau klik sort/pagination
+            document.getElementById('tableSearchForm')?.addEventListener('submit', saveCurrentScroll);
+            document.getElementById('editLoanForm')?.addEventListener('submit', saveCurrentScroll);
+            document.querySelectorAll('.delete-loan-form').forEach((form) => {
+                form.addEventListener('submit', function () {
+                    saveCurrentScroll();
+                });
+            });
+            document.querySelectorAll('.keep-scroll-link, .pagination a.page-link').forEach((link) => {
+                link.addEventListener('click', saveCurrentScroll);
+            });
+        })();
+
+        document.getElementById('fillDummyAdminBtn')?.addEventListener('click', function () {
+            document.getElementById('adminEmailField').value = 'admin.perpus@gmail.com';
+            document.getElementById('adminPassField').value = 'AdminLib#2026';
+        });
+
+        const importFileInput = document.getElementById('importFileInput');
+        const importFileNameText = document.getElementById('importFileNameText');
+        importFileInput?.addEventListener('change', function () {
+            const file = this.files?.[0];
+            if (importFileNameText) {
+                importFileNameText.textContent = file ? file.name : 'Pilih File Excel / CSV...';
+            }
+        });
+
+        @if($isAdmin)
+            const updateUrlTemplate = @json(route('booklibrary.manage.update', ['id' => '__ID__']));
+            document.querySelectorAll('.edit-loan-btn').forEach((btn) => {
+                btn.addEventListener('click', function () {
+                    const id = this.getAttribute('data-id');
+                    const form = document.getElementById('editLoanForm');
+                    if (form) {
+                        form.action = updateUrlTemplate.replace('__ID__', encodeURIComponent(id));
+                    }
+                    document.getElementById('editGmailInput').value = this.getAttribute('data-gmail') || '';
+                    document.getElementById('editNamaInput').value = this.getAttribute('data-nama') || '';
+                    document.getElementById('editJudulInput').value = this.getAttribute('data-judul') || '';
+                    document.getElementById('editQtyInput').value = this.getAttribute('data-qty') || 1;
+                    document.getElementById('editTglPinjamInput').value = this.getAttribute('data-tgl-pinjam') || '';
+                    document.getElementById('editDurasiInput').value = this.getAttribute('data-durasi') || 7;
+                    document.getElementById('editStatusInput').value = this.getAttribute('data-status') || 'Dipinjam';
+                    document.getElementById('editCatatanInput').value = this.getAttribute('data-catatan') || '';
+                });
+            });
+
+            const statusChartData = @json($statusChart);
+            const borrowerChartData = @json($borrowerChart);
+
+            const statusCtx = document.getElementById('loanStatusChart');
+            if (statusCtx) {
+                new Chart(statusCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: statusChartData.labels,
+                        datasets: [{
+                            data: statusChartData.values,
+                            backgroundColor: ['#f59e0b', '#10b981'],
+                            borderColor: '#0e172d',
+                            borderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { position: 'bottom', labels: { color: '#cbd5e1' } }
+                        }
+                    }
+                });
+            }
+
+            const borrowerCtx = document.getElementById('loanPerGmailChart');
+            if (borrowerCtx) {
+                new Chart(borrowerCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: borrowerChartData.labels.length ? borrowerChartData.labels : ['Belum Ada Data'],
+                        datasets: [{
+                            label: 'Jumlah Buku Dipinjam',
+                            data: borrowerChartData.values.length ? borrowerChartData.values : [0],
+                            backgroundColor: '#3b82f6',
+                            borderRadius: 8,
+                            maxBarThickness: 44
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            x: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(147,197,253,0.08)' } },
+                            y: { beginAtZero: true, ticks: { precision: 0, color: '#94a3b8' }, grid: { color: 'rgba(147,197,253,0.10)' } }
+                        },
+                        plugins: { legend: { display: false } }
+                    }
+                });
+            }
+        @endif
     </script>
 </body>
 </html>
