@@ -6,16 +6,35 @@ use App\Models\PeminjamanBuku;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Hash;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class BookLibraryController extends Controller
 {
-    private array $allowedAdmins = [
-        'admin.perpus@gmail.com' => 'AdminLib#2026',
-        'pustakawan.utama@gmail.com' => 'Pustakawan2026!',
-    ];
+    private function isValidAdmin(string $email, string $password): bool
+    {
+        $allowedEmail = strtolower(trim((string) env('GLACIARY_ADMIN_EMAIL', '')));
+        $allowedHash  = (string) env('GLACIARY_ADMIN_PASSWORD_HASH', '');
+
+        if ($allowedEmail === '' || $allowedHash === '') {
+            return false;
+        }
+
+        $inputEmail = strtolower(trim($email));
+
+        if (!hash_equals($allowedEmail, $inputEmail)) {
+            return false;
+        }
+
+        // Mendukung hash bcrypt/argon ($2y$...) sekaligus fallback jika suatu saat diisi teks biasa
+        if (str_starts_with($allowedHash, '$2y$') || str_starts_with($allowedHash, '$2a$') || str_starts_with($allowedHash, '$2b$') || str_starts_with($allowedHash, '$argon2')) {
+            return Hash::check($password, $allowedHash);
+        }
+
+        return hash_equals($allowedHash, $password);
+    }
 
     public function index(Request $request)
     {
@@ -183,10 +202,10 @@ class BookLibraryController extends Controller
             'password' => ['required', 'string'],
         ]);
 
-        $email = strtolower(trim($request->input('email')));
-        $password = $request->input('password');
+        $email = strtolower(trim((string) $request->input('email')));
+        $password = (string) $request->input('password');
 
-        if (!isset($this->allowedAdmins[$email]) || $this->allowedAdmins[$email] !== $password) {
+        if (!$this->isValidAdmin($email, $password)) {
             return redirect()->route('booklibrary.manage')
                 ->with('error', 'Akun pengelola tidak terdaftar atau kata sandi salah.');
         }
@@ -196,7 +215,8 @@ class BookLibraryController extends Controller
             'library_admin_email' => $email,
         ]);
 
-        return redirect()->route('booklibrary.manage');
+        return redirect()->route('booklibrary.manage')
+            ->with('success', 'Berhasil masuk ke Management System.');
     }
 
     public function adminLogout()
@@ -397,7 +417,7 @@ class BookLibraryController extends Controller
     public function searchApi(Request $request)
     {
         $q = trim((string) $request->query('q', 'Atomic Habits'));
-        $response = Http::timeout(10)->get('https://openlibrary.org/search.json', [
+        $response = Http::timeout(10)->get('https://openLibrary.org/search.json', [
             'q' => $q,
             'limit' => 8,
         ]);

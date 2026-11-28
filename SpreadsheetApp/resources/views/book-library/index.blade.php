@@ -10,6 +10,10 @@
         href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
         rel="stylesheet">
 
+    <link
+        rel="stylesheet"
+        href="https://cdn.datatables.net/1.13.11/css/jquery.dataTables.min.css">
+
     <style>
         @font-face {
             font-family: 'Surgena';
@@ -723,7 +727,317 @@
             color: #7d92b4;
             font-size: 13px;
             padding: 28px 0;
+        } 
+        /*==================================================
+        CUSTOM DATATABLES - TEMA GLACIARY
+        ====================================================*/
+
+        /* Dropdown "entries per page" */
+        .dataTables_length select {
+            background: #0b1730 !important;
+            color: #ffffff !important;
+            border: 1px solid rgb(105, 240, 255) !important;
+            border-radius: 8px !important;
+            padding: 4px 28px 4px 8px !important;
+            outline: none !important;
         }
+
+        /* Tulisan "entries per page" */
+        .dataTables_length {
+            color: #ffffff !important;
+            font-size: 13px !important;
+        }
+
+        /* Informasi "Showing 1 to 10 of 12 entries" */
+        .dataTables_info {
+            color: #ffffff !important;
+            font-weight: 500;
+            padding-top: 12px !important;
+            padding-right: 30px !important;
+        }
+
+        /* Container pagination */
+        .dataTables_paginate {
+            padding-top: 8px !important;
+            margin-top: 5px !important;
+        }
+
+        /* Semua tombol pagination */
+        .dataTables_wrapper .dataTables_paginate .paginate_button {
+            background: #0b1730 !important;
+            color: #93c5fd !important;
+            border: 1px solid rgb(96, 223, 255) !important;
+            border-radius: 6px !important;
+            margin-left: 3px !important;
+            padding: 5px 10px !important;
+            transition: all 0.2s ease;
+        }
+
+        /* Hover */
+        .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+            background: #1d4ed8 !important;
+            color: #ffffff !important;
+            border-color: #60a5fa !important;
+        }
+
+        /* Tombol halaman aktif */
+        .dataTables_wrapper .dataTables_paginate .paginate_button.current {
+            background: linear-gradient(135deg, #2563eb, #3b82f6) !important;
+            color: #ffffff !important;
+            border-color: #60a5fa !important;
+        }
+
+        /* Hover pada halaman aktif */
+        .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
+            background: #2563eb !important;
+            color: #ffffff !important;
+        }
+
+        /* Tombol disabled (Previous/Next saat tidak tersedia) */
+        .dataTables_wrapper .dataTables_paginate .paginate_button.disabled,
+        .dataTables_wrapper .dataTables_paginate .paginate_button.disabled:hover {
+            background: #071225 !important;
+            color: #526987 !important;
+            border-color: rgba(147, 197, 253, 0.12) !important;
+            cursor: default !important;
+        }
+        /* =====================================================
+        DATATABLES - TEMA GLACIARY
+        ===================================================== */
+
+        /* Tulisan "entries per page" */
+        #bukuSayaTable_wrapper .dataTables_length {
+            color: #93c5fd !important;
+            font-size: 13px !important;
+            margin-bottom: 10px !important;
+        }
+
+        /* Dropdown jumlah data */
+        #bukuSayaTable_wrapper .dataTables_length select {
+            background: #0d152a !important;
+            color: #ffffff !important;
+            border: 1px solid rgba(147, 197, 253, 0.35) !important;
+            border-radius: 999px !important;
+            padding: 5px 28px 5px 10px !important;
+            margin: 0 4px !important;
+            outline: none !important;
+            box-shadow: none !important;
+        }
+
+        /* Saat dropdown dipilih */
+        #bukuSayaTable_wrapper .dataTables_length select:focus {
+            border-color: #60a5fa !important;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.20) !important;
+        }
+
+        /* Informasi data */
+        #bukuSayaTable_wrapper .dataTables_info {
+            color: #8da4c7 !important;
+            font-size: 12px !important;
+            padding-top: 12px !important;
+        }
+
+        /* Area pagination */
+        #bukuSayaTable_wrapper .dataTables_paginate {
+            padding-top: 8px !important;
+        }
+
+        /* Semua tombol pagination */
+        #bukuSayaTable_wrapper .dataTables_paginate .paginate_button {
+            background: #0d152a !important;
+            background-image: none !important;
+            color: #93c5fd !important;
+
+            border: 1px solid rgba(147, 197, 253, 0.25) !important;
+            border-radius: 999px !important;
+
+            padding: 5px 10px !important;
+            margin-left: 4px !important;
+
+            box-shadow: none !important;
+            text-shadow: none !important;
+
+            transition: all 0.2s ease !important;
+        }
+
+        /* Hover */
+        #bukuSayaTable_wrapper .dataTables_paginate .paginate_button:hover {
+            background: linear-gradient(135deg, #3b82f6, #2563eb) !important;
+            background-image: none !important;
+            color: #ffffff !important;
+
+            border-color: rgba(147, 197, 253, 0.65) !important;
+        }
+
+        /* Halaman aktif */
+        #bukuSayaTable_wrapper .dataTables_paginate .paginate_button.current {
+            background: linear-gradient(135deg, #3b82f6, #2563eb) !important;
+            background-image: none !important;
+            color: #ffffff !important;
+
+            border-color: rgba(191, 219, 254, 0.75) !important;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25) !important;
+        }
+
+        /* Hover halaman aktif */
+        #bukuSayaTable_wrapper .dataTables_paginate .paginate_button.current:hover {
+            background: #2563eb !important;
+            color: #ffffff !important;
+        }
+
+        /* Tombol disabled */
+        #bukuSayaTable_wrapper .dataTables_paginate .paginate_button.disabled,
+        #bukuSayaTable_wrapper .dataTables_paginate .paginate_button.disabled:hover {
+            background: rgba(13, 21, 42, 0.60) !important;
+            background-image: none !important;
+            color: #526987 !important;
+
+            border-color: rgba(147, 197, 253, 0.12) !important;
+
+            box-shadow: none !important;
+        }
+        
+        /* =====================================================
+        DATATABLES SEARCH - TEMA GLACIARY
+        ===================================================== */
+
+        #bukuSayaTable_wrapper .dataTables_filter {
+            color: #93c5fd !important;
+            margin-bottom: 10px;
+        }
+
+        #bukuSayaTable_wrapper .dataTables_filter label {
+            color: #93c5fd !important;
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        #bukuSayaTable_wrapper .dataTables_filter input {
+            background: #0b1730 !important;
+            color: #ffffff !important;
+            border: 1px solid #334d73 !important;
+            border-radius: 999px !important;
+            padding: 7px 14px !important;
+            margin-left: 8px !important;
+            outline: none !important;
+            box-shadow: none !important;
+        }
+
+        #bukuSayaTable_wrapper .dataTables_filter input:focus {
+            border-color: #3b82f6 !important;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.18) !important;
+        }
+
+        #bukuSayaTable_wrapper .dataTables_filter input::placeholder {
+            color: #7186a6 !important;
+        }
+        /* =====================================================
+        DATATABLES MANAGEMENT SYSTEM - GLACIARY
+        ===================================================== */
+
+        /* SHOW ENTRIES */
+        #databasePeminjamanTable_wrapper .dataTables_length {
+            color: #ffffff !important;
+            font-size: 13px !important;
+            margin-bottom: 15px !important;
+        }
+
+        #databasePeminjamanTable_wrapper .dataTables_length label {
+            color: #ffffff !important;
+        }
+
+        #databasePeminjamanTable_wrapper .dataTables_length select {
+            background-color: #0b1730 !important;
+            color: #ffffff !important;
+            border: 1px solid #60a5fa !important;
+            border-radius: 8px !important;
+            padding: 5px 28px 5px 10px !important;
+            margin: 0 6px !important;
+        }
+
+        /* INFO DATA */
+        #databasePeminjamanTable_wrapper .dataTables_info {
+            color: #ffffff !important;
+            font-size: 13px !important;
+            padding-top: 10px !important;
+            margin-right: 40px !important;
+        }
+
+        /* PAGINATION */
+        #databasePeminjamanTable_wrapper .dataTables_paginate {
+            margin-top: 5px !important;
+            padding-top: 0 !important;
+        }
+
+        /* Jarak antara info dan pagination */
+        #databasePeminjamanTable_wrapper .dataTables_info {
+            float: left !important;
+        }
+
+        #databasePeminjamanTable_wrapper .dataTables_paginate {
+            float: right !important;
+        }
+
+        /* Membersihkan float */
+        #databasePeminjamanTable_wrapper::after {
+            content: "";
+            display: block;
+            clear: both;
+        }
+        /* Tulisan "Show _MENU_ entries" pada semua tabel DataTables & #databasePeminjamanTable */
+.dataTables_wrapper .dataTables_length,
+.dataTables_wrapper .dataTables_length label,
+#databasePeminjamanTable_wrapper .dataTables_length,
+#databasePeminjamanTable_wrapper .dataTables_length label {
+    color: #ffffff !important;
+    font-size: 13px !important;
+    font-weight: 500;
+}
+
+/* Dropdown jumlah entries */
+.dataTables_wrapper .dataTables_length select,
+#databasePeminjamanTable_wrapper .dataTables_length select {
+    background-color: #0b1730 !important;
+    color: #ffffff !important;
+    border: 1px solid #60a5fa !important;
+    border-radius: 8px !important;
+    padding: 5px 28px 5px 10px !important;
+    margin: 0 6px !important;
+    outline: none !important;
+}
+
+/* Informasi "Showing 1 to 10 of ... entries" */
+.dataTables_wrapper .dataTables_info,
+#databasePeminjamanTable_wrapper .dataTables_info {
+    color: #ffffff !important;
+    font-size: 13px !important;
+    font-weight: 500;
+    padding-top: 12px !important;
+    margin-right: 36px !important; /* Jarak aman ke sisi kanan / pagination */
+}
+
+/* Jarak antara teks info dan tombol < 1 | 2 > */
+.dataTables_wrapper .dataTables_paginate,
+#databasePeminjamanTable_wrapper .dataTables_paginate {
+    padding-top: 8px !important;
+    margin-top: 6px !important;
+    margin-left: 24px !important; /* Tambahan jarak horizontal dari teks info */
+}
+
+/* Jika ingin teks info & pagination sejajar rapi di bawah tabel */
+.dataTables_wrapper .dataTables_info {
+    float: left !important;
+}
+
+.dataTables_wrapper .dataTables_paginate {
+    float: right !important;
+}
+
+.dataTables_wrapper::after {
+    content: "";
+    display: block;
+    clear: both;
+}
     </style>
 </head>
 
@@ -1038,7 +1352,7 @@
                             </div>
                         @else
                             <div class="table-responsive">
-                                <table class="table table-hover align-middle mb-0">
+                                <table id="bukuSayaTable" class="table table-hover align-middle mb-0">
                                     <thead>
                                         <tr>
                                             <th style="width: 54px;">No.</th>
@@ -1150,6 +1464,36 @@
 
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+    <script src="https://cdn.datatables.net/1.13.11/js/jquery.dataTables.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            if ($('#bukuSayaTable').length) {
+                $('#bukuSayaTable').DataTable({
+                    pageLength: 10,
+                    lengthMenu: [10, 25, 50, 100],
+
+                    paging: true,
+                    searching: true,
+                    ordering: true,
+
+                    language: {
+                        search: "Cari:",
+                        lengthMenu: "Show _MENU_ entries",
+                        info: "Showing _START_ to _END_ of _TOTAL_ entries",
+                        paginate: {
+                            previous: "Previous",
+                            next: "Next"
+                        }
+                    }
+                });
+            }
+        });
+    </script>
+    
     <script>
         (function () {
             const SCROLL_KEY = 'booklibrary_index_scroll_y';
@@ -1447,6 +1791,7 @@
 
             loadGenreGallery('all');
         })();
+    
     </script>
 </body>
 </html>

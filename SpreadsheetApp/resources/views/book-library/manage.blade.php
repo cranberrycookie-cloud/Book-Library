@@ -156,6 +156,26 @@
             --bs-table-hover-color: #ffffff;
             --bs-table-border-color: rgba(147, 197, 253, 0.16);
         }
+        /* Paksa teks info paginasi menjadi putih bersih */
+        #database-peminjaman-panel nav,
+        #database-peminjaman-panel nav p,
+        #database-peminjaman-panel nav span,
+        #database-peminjaman-panel nav div,
+        #database-peminjaman-panel .text-muted,
+        #database-peminjaman-panel .text-body-secondary {
+            color: #ffffff !important;
+        }
+
+        /* Beri jarak antara teks "Showing 1 to 10 of 14 results" dan tombol < 1 2 > */
+        #database-peminjaman-panel nav > div.d-none.flex-sm-fill.d-sm-flex.align-items-sm-center.justify-content-sm-between {
+            gap: 28px !important;
+        }
+
+        #database-peminjaman-panel nav .pagination {
+            gap: 6px;
+            margin-bottom: 0 !important;
+            margin-left: 16px !important;
+        }
 
         .table thead th {
             background: rgba(20, 34, 66, 0.88);
@@ -185,6 +205,35 @@
 
         .modal-content.glass-modal .btn-close {
             filter: invert(1) grayscale(100%) brightness(200%);
+        }
+
+        /*Tambahin Icon Show Password */
+        .password-input-wrapper {
+            position: relative;
+        }
+
+        .password-input-wrapper .form-control {
+            padding-right: 42px;
+        }
+
+        .toggle-password-btn {
+            position: absolute;
+            top: 50%;
+            right: 12px;
+            transform: translateY(-50%);
+            background: transparent;
+            border: none;
+            color: #93c5fd;
+            padding: 4px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: color 0.15s ease;
+        }
+
+        .toggle-password-btn:hover {
+            color: #ffffff;
         }
     </style>
 </head>
@@ -250,30 +299,34 @@
                     Halaman ini khusus untuk pengelola perpustakaan. Masuk dengan akun Gmail khusus yang terdaftar.
                 </p>
 
-                <div class="p-3 rounded-4 mb-3 small" style="background: rgba(14, 23, 45, 0.72); backdrop-filter: blur(12px); border: 1px solid rgba(147, 197, 253, 0.24);">
-                    <div class="text-secondary">Akun Gmail Dummy Pengelola:</div>
-                    <div>Email: <strong class="text-white">admin.perpus@gmail.com</strong></div>
-                    <div>Password: <strong class="text-white">AdminLib#2026</strong></div>
-                    <button type="button" class="btn btn-sm btn-outline-info mt-2" id="fillDummyAdminBtn">
-                        Isi Otomatis Akun Dummy
-                    </button>
-                </div>
-
                 <form action="{{ route('booklibrary.manage.login') }}" method="POST" class="row g-3">
                     @csrf
                     <div class="col-12">
                         <label class="form-label small fw-bold text-secondary">Email Pengelola</label>
                         <input type="email" name="email" id="adminEmailField" class="form-control" placeholder="admin.perpus@gmail.com" required>
                     </div>
+
                     <div class="col-12">
                         <label class="form-label small fw-bold text-secondary">Kata Sandi</label>
-                        <input type="password" name="password" id="adminPassField" class="form-control" placeholder="Masukkan kata sandi" required>
-                    </div>
-                    <div class="col-12">
-                        <button type="submit" class="btn btn-primary w-100 fw-bold py-2">
-                            Masuk ke Dashboard Management
-                        </button>
-                    </div>
+                        <div class="password-input-wrapper">
+                            <input type="password" name="password" id="adminPassField" class="form-control" placeholder="Masukkan kata sandi" required>
+                            <button type="button" class="toggle-password-btn" id="toggleAdminPassBtn" aria-label="Lihat atau sembunyikan kata sandi" title="Tampilkan kata sandi">
+                                <svg id="eyeOpenIcon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                </svg>
+                                <svg id="eyeClosedIcon" class="d-none" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                                    <line x1="1" y1="1" x2="23" y2="23"></line>
+                                </svg>
+                            </button>
+                        </div>
+
+                        <div class="col-12 mt-4">
+                            <button type="submit" class="btn btn-primary w-100 fw-bold py-2">
+                                Masuk ke Dashboard Management
+                            </button>
+                        </div>
                 </form>
             </div>
         @else
@@ -302,16 +355,35 @@
                     <div class="panel h-100">
                         <h5 class="fw-bold text-white">Import Data Peminjaman</h5>
                         <p class="text-secondary small">Kolom: Gmail | Nama | Judul Buku | Qty | Tgl Pinjam | Durasi | Status</p>
-                        <form action="{{ route('booklibrary.import') }}" method="POST" enctype="multipart/form-data">
+                        <form action="{{ route('booklibrary.manage.login') }}" method="POST" class="row g-3">
                             @csrf
-                            <input type="file" id="importFileInput" name="file_excel" class="d-none" accept=".xlsx,.xls,.csv" required>
-                            <label for="importFileInput" class="custom-file-picker-btn mb-2" id="importFileLabel">
-                                <span class="file-spark">✦</span>
-                                <span id="importFileNameText">Pilih File Excel / CSV...</span>
-                            </label>
-                            <button type="submit" class="btn btn-success w-100 fw-semibold">
-                                Import Excel / CSV
-                            </button>
+                            <div class="col-12">
+                                <label class="form-label small fw-bold text-secondary">Email Pengelola</label>
+                                <input type="email" name="email" id="adminEmailField" class="form-control" placeholder="admin.perpus@gmail.com" required>
+                            </div>
+
+                            <div class="col-12">
+                                <label class="form-label small fw-bold text-secondary">Kata Sandi</label>
+                                <div class="password-input-wrapper">
+                                    <input type="password" name="password" id="adminPassField" class="form-control" placeholder="Masukkan kata sandi" required>
+                                    <button type="button" class="toggle-password-btn" id="toggleAdminPassBtn" aria-label="Lihat atau sembunyikan kata sandi" title="Tampilkan kata sandi">
+                                        <svg id="eyeOpenIcon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                            <circle cx="12" cy="12" r="3"></circle>
+                                        </svg>
+                                        <svg id="eyeClosedIcon" class="d-none" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                                            <line x1="1" y1="1" x2="23" y2="23"></line>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="col-12 mt-4">
+                                <button type="submit" class="btn btn-primary w-100 fw-bold py-2">
+                                    Masuk ke Dashboard Management
+                                </button>
+                            </div>
                         </form>
                     </div>
                 </div>
@@ -591,6 +663,19 @@
         const importFileInput = document.getElementById('importFileInput');
         const importFileNameText = document.getElementById('importFileNameText');
         importFileInput?.addEventListener('change', function () {
+            const toggleAdminPassBtn = document.getElementById('toggleAdminPassBtn');
+            const adminPassField = document.getElementById('adminPassField');
+            const eyeOpenIcon = document.getElementById('eyeOpenIcon');
+            const eyeClosedIcon = document.getElementById('eyeClosedIcon');
+
+            toggleAdminPassBtn?.addEventListener('click', function () {
+                if (!adminPassField) return;
+                const isHidden = adminPassField.type === 'password';
+                adminPassField.type = isHidden ? 'text' : 'password';
+                eyeOpenIcon?.classList.toggle('d-none', isHidden);
+                eyeClosedIcon?.classList.toggle('d-none', !isHidden);
+                this.setAttribute('title', isHidden ? 'Sembunyikan kata sandi' : 'Tampilkan kata sandi');
+            });
             const file = this.files?.[0];
             if (importFileNameText) {
                 importFileNameText.textContent = file ? file.name : 'Pilih File Excel / CSV...';
